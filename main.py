@@ -50,7 +50,7 @@ def send_otp(data: EmailRequest):
 
     otp_store[data.email] = otp
 
-    print("Generated OTP:", otp)  # visible in backend terminal for demo
+    print("Generated OTP:", otp)
 
     return {"message": "OTP sent"}
 
@@ -75,7 +75,7 @@ load_dotenv(BASE_DIR / ".env")
 # IMPORT SERVICES
 # -----------------------
 
-from database import logs_collection
+from database import logs_collection, conn
 from services import timeline_engine, graph_engine
 from services import risk_engine, path_engine
 from services import threat_engine, simulation_engine
@@ -138,7 +138,23 @@ def ingest_log(event: LogEvent):
 
     log_dict = event.dict()
 
-    logs_collection.insert_one(log_dict)
+    logs_collection.execute(
+        """
+        INSERT INTO logs (source_ip, destination_ip, event_type, user_name, status, data_transfer, timestamp)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """,
+        (
+            log_dict["source_ip"],
+            log_dict["destination_ip"],
+            log_dict["event_type"],
+            log_dict["user"],
+            log_dict["status"],
+            log_dict["data_transfer"],
+            log_dict["timestamp"]
+        )
+    )
+
+    conn.commit()
 
     event_buffer = pd.concat(
         [event_buffer, pd.DataFrame([log_dict])],
@@ -174,7 +190,9 @@ def ingest_batch(events: List[LogEvent]):
 
 @app.get("/view-logs")
 def view_logs():
-    return list(logs_collection.find({}, {"_id": 0}))
+    logs_collection.execute("SELECT * FROM logs")
+    rows = logs_collection.fetchall()
+    return rows
 
 
 # -----------------------
@@ -184,17 +202,10 @@ def view_logs():
 @app.get("/recent-threats")
 def recent_threats():
 
-    logs = list(logs_collection.find().sort("_id", -1).limit(5))
+    logs_collection.execute("SELECT * FROM logs ORDER BY id DESC LIMIT 5")
+    logs = logs_collection.fetchall()
 
-    return [
-        {
-            "source_ip": log.get("source_ip"),
-            "event_type": log.get("event_type"),
-            "user": log.get("user"),
-            "status": log.get("status")
-        }
-        for log in logs
-    ]
+    return logs
 
 
 # -----------------------
