@@ -18,10 +18,6 @@ export default function Navbar() {
           Threat Intelligence
         </Link>
 
-        <Link to="/attack-graph" className="hover:text-cyan-400">
-          Attack Graph
-        </Link>
-
         <Link to="/simulation" className="hover:text-cyan-400">
           Simulation
         </Link>

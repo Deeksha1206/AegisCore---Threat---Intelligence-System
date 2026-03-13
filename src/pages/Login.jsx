@@ -133,7 +133,7 @@ document
 }}
 className="bg-cyan-500 px-4 py-2 rounded text-black text-sm"
 >
-Request Demo
+Explore Platform
 </button>
 
 </div>
@@ -180,22 +180,11 @@ Detect • Explain • Simulate • Respond
 
 <div className="flex gap-4">
 
-<button
-onClick={()=>{
-document
-.getElementById("platform-capabilities")
-.scrollIntoView({behavior:"smooth"});
-}}
-className="bg-cyan-500 px-6 py-2 rounded text-black text-sm"
->
-Explore Platform
-</button>
-
 <a
 href={demoVideo}
 target="_blank"
 rel="noopener noreferrer"
-className="border border-slate-700 px-6 py-2 rounded text-sm"
+className="bg-cyan-500 px-6 py-2 rounded text-black text-sm"
 >
 Watch Product Tour
 </a>
