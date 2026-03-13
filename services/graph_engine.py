@@ -1,22 +1,31 @@
 import networkx as nx
 
-def build_graph(logs_df):
 
-    G = nx.DiGraph()
+def build_graph(df):
 
-    for _, row in logs_df.iterrows():
+    graph = nx.DiGraph()
 
-        source = row["source_ip"]
-        destination = row["destination_ip"]
+    for _, row in df.iterrows():
+
+        source_ip = row["source_ip"]
+        destination_ip = row["destination_ip"]
+        event_type = row["event_type"]
         user = row["user"]
 
-        # Add nodes
-        G.add_node(source, type="device")
-        G.add_node(destination, type="server")
-        G.add_node(user, type="user")
+        # Always update source node with latest user
+        graph.add_node(
+            source_ip,
+            user=user
+        )
 
-        # Create connections
-        G.add_edge(user, source)
-        G.add_edge(source, destination)
+        # Destination node
+        graph.add_node(destination_ip)
 
-    return G
+        # Edge connection
+        graph.add_edge(
+            source_ip,
+            destination_ip,
+            event=event_type
+        )
+
+    return graph

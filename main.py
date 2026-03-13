@@ -205,8 +205,15 @@ def recent_threats():
     logs_collection.execute("SELECT * FROM logs ORDER BY id DESC LIMIT 5")
     logs = logs_collection.fetchall()
 
-    return logs
-
+    return [
+        {
+            "source_ip": row[1],
+            "event_type": row[3],
+            "user": row[4],
+            "status": row[5]
+        }
+        for row in logs
+    ]
 
 # -----------------------
 # RISK SUMMARY
