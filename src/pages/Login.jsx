@@ -19,6 +19,7 @@ const [email, setEmail] = useState("");
 const [otp, setOtp] = useState("");
 const [step, setStep] = useState(1);
 const [verified, setVerified] = useState(false);
+const [selectedFeature, setSelectedFeature] = useState(null);
 
 const handleLogin = async (e) => {
 e.preventDefault();
@@ -60,6 +61,45 @@ console.error("OTP verification failed", error);
 
 };
 
+const features = [
+{
+title:"Real-Time Threat Correlation",
+image:threat,
+description:"Correlates live security events from backend log ingestion and MongoDB threat memory.",
+details:"Our log ingestion engine collects security logs from multiple sources. Using correlation rules and anomaly detection, the system identifies coordinated attacks across systems in real time."
+},
+{
+title:"Attack Path Intelligence",
+image:attack,
+description:"Maps suspicious movement across users, IPs, and devices.",
+details:"Using NetworkX graph analysis, the system reconstructs attacker movement across systems, helping analysts visualize lateral movement and compromised nodes."
+},
+{
+title:"Adaptive Risk Scoring",
+image:risk,
+description:"Dynamic threat scoring powered by backend risk analysis.",
+details:"The platform calculates dynamic risk scores for users, devices, and IP addresses based on suspicious patterns, anomaly scores, and security events."
+},
+{
+title:"Defense Simulation Engine",
+image:simulation,
+description:"Simulate defense actions like blocking IPs or isolating devices.",
+details:"Security teams can simulate response actions before applying them in production environments."
+},
+{
+title:"Incident Report Intelligence",
+image:report,
+description:"Generate AI-driven incident reports for security teams.",
+details:"Our report engine automatically generates incident summaries, attack timelines, threat levels, and recommended mitigation strategies."
+},
+{
+title:"AI Security Copilot",
+image:copilot,
+description:"Explain threats and recommend actions with AI assistance.",
+details:"The AI assistant uses LLM-based reasoning to analyze logs, risk scores, and attack paths."
+}
+];
+
 return(
 
 <div className="w-full text-white">
@@ -75,13 +115,24 @@ AegisCore
 <div className="flex gap-4">
 
 <button
-onClick={()=>navigate("/") }
+onClick={()=>{
+document
+.getElementById("login-section")
+.scrollIntoView({behavior:"smooth"});
+}}
 className="text-sm text-slate-300"
 >
 Sign In
 </button>
 
-<button className="bg-cyan-500 px-4 py-2 rounded text-black text-sm">
+<button
+onClick={()=>{
+document
+.getElementById("platform-capabilities")
+.scrollIntoView({behavior:"smooth"});
+}}
+className="bg-cyan-500 px-4 py-2 rounded text-black text-sm"
+>
 Request Demo
 </button>
 
@@ -89,11 +140,9 @@ Request Demo
 
 </div>
 
-{/* HERO SECTION */}
+{/* HERO */}
 
 <div className="flex flex-wrap px-16 py-24">
-
-{/* LEFT SIDE */}
 
 <div className="w-full lg:w-1/2 pr-0 lg:pr-16 mb-12 lg:mb-0">
 
@@ -132,7 +181,11 @@ Detect • Explain • Simulate • Respond
 <div className="flex gap-4">
 
 <button
-onClick={()=>navigate("/dashboard")}
+onClick={()=>{
+document
+.getElementById("platform-capabilities")
+.scrollIntoView({behavior:"smooth"});
+}}
 className="bg-cyan-500 px-6 py-2 rounded text-black text-sm"
 >
 Explore Platform
@@ -153,7 +206,7 @@ Watch Product Tour
 
 {/* LOGIN CARD */}
 
-<div className="w-full lg:w-1/2 flex justify-center">
+<div id="login-section" className="w-full lg:w-1/2 flex justify-center">
 
 <div className="bg-[#0f172a] border border-slate-800 p-8 rounded-xl w-[380px]">
 
@@ -182,18 +235,15 @@ className="w-full mb-4 px-3 py-2 rounded bg-[#020617] border border-slate-700"
 />
 
 <select className="w-full mb-4 px-3 py-2 rounded bg-[#020617] border border-slate-700">
-
 <option>Security Analyst</option>
 <option>SOC Engineer</option>
 <option>Incident Responder</option>
 <option>Security Administrator</option>
-
 </select>
 
-{step === 2 && (
+{step===2 &&(
 
 <>
-
 <input
 type="text"
 placeholder="Enter 6-digit verification code"
@@ -203,9 +253,8 @@ className="w-full mb-3 px-3 py-2 rounded bg-[#020617] border border-slate-700"
 />
 
 <p className="text-xs text-slate-400 mb-4">
-A secure verification code has been sent to your registered enterprise email.
+Verification code sent to enterprise email.
 </p>
-
 </>
 
 )}
@@ -214,16 +263,9 @@ A secure verification code has been sent to your registered enterprise email.
 type="submit"
 className="w-full bg-cyan-500 py-2 rounded text-black"
 >
-
-{step === 1 ? "Authenticate & Continue" : "Verify & Continue Securely"}
-
+{step===1?"Authenticate & Continue":"Verify & Continue Securely"}
 </button>
-
-</form>
-
-{/* AUTHENTICATION FLOW */}
-
-<div className="mt-5 text-xs text-slate-400">
+<div className="mt-6 text-xs text-slate-400">
 
 <p className="text-cyan-400 mb-2">Authentication Flow:</p>
 
@@ -232,25 +274,17 @@ className="w-full bg-cyan-500 py-2 rounded text-black"
 <p>✔ Two-Step Verification Enabled</p>
 <p>✔ Secure Session Initialization</p>
 
-</div>
-
-{/* SUCCESS MESSAGE */}
-
-{verified && (
-
-<p className="text-green-400 text-sm mt-4">
-Verification successful. Initializing secure session...
-</p>
-
-)}
-
-<p className="text-xs text-slate-500 mt-6">
+<p className="text-slate-500 mt-4">
 Access is granted only after identity verification and role authorization.
 </p>
 
-<p className="text-xs text-slate-500 mt-1">
+<p className="text-slate-500 mt-1">
 Monitored under secure enterprise identity protocol.
 </p>
+
+</div>
+
+</form>
 
 </div>
 
@@ -260,7 +294,7 @@ Monitored under secure enterprise identity protocol.
 
 {/* PLATFORM CAPABILITIES */}
 
-<div className="px-16 py-24 border-t border-slate-800">
+<div id="platform-capabilities" className="px-16 py-24 border-t border-slate-800">
 
 <h2 className="text-3xl text-cyan-400 mb-16 text-center">
 Platform Capabilities
@@ -268,52 +302,112 @@ Platform Capabilities
 
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
 
+{features.map((feature,index)=>(
+
+<div
+key={index}
+onClick={()=>setSelectedFeature(feature)}
+className="bg-[#0f172a] border border-slate-800 rounded-xl p-6 cursor-pointer hover:scale-105 transition"
+>
+
+<img src={feature.image} className="rounded mb-4 h-40 w-full object-cover"/>
+
+<h3 className="text-cyan-400 mb-2">{feature.title}</h3>
+
+<p className="text-slate-400 text-sm">{feature.description}</p>
+
+</div>
+
+))}
+
+</div>
+
+</div>
+
+{/* WHY AEGISCORE */}
+
+<div className="px-16 py-24 border-t border-slate-800">
+
+<h2 className="text-3xl text-cyan-400 mb-16 text-center">
+Why AegisCore
+</h2>
+
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+
 <div className="bg-[#0f172a] border border-slate-800 rounded-xl p-6">
-<img src={threat} className="rounded mb-4 h-40 w-full object-cover"/>
-<h3 className="text-cyan-400 mb-2">Real-Time Threat Correlation</h3>
+<h3 className="text-cyan-400 mb-3">Real-Time Threat Visibility</h3>
 <p className="text-slate-400 text-sm">
-Correlates live security events from backend log ingestion and MongoDB threat memory.
+Monitor and detect suspicious security events instantly across logs and systems.
 </p>
 </div>
 
 <div className="bg-[#0f172a] border border-slate-800 rounded-xl p-6">
-<img src={attack} className="rounded mb-4 h-40 w-full object-cover"/>
-<h3 className="text-cyan-400 mb-2">Attack Path Intelligence</h3>
+<h3 className="text-cyan-400 mb-3">AI-Driven Security Intelligence</h3>
 <p className="text-slate-400 text-sm">
-Maps suspicious movement across users, IPs, and devices.
+Machine learning models detect anomalies and highlight hidden threats.
 </p>
 </div>
 
 <div className="bg-[#0f172a] border border-slate-800 rounded-xl p-6">
-<img src={risk} className="rounded mb-4 h-40 w-full object-cover"/>
-<h3 className="text-cyan-400 mb-2">Adaptive Risk Scoring</h3>
+<h3 className="text-cyan-400 mb-3">Attack Path Reconstruction</h3>
 <p className="text-slate-400 text-sm">
-Dynamic threat scoring powered by backend risk analysis.
+Graph analysis reveals how attackers move across systems.
 </p>
 </div>
 
 <div className="bg-[#0f172a] border border-slate-800 rounded-xl p-6">
-<img src={simulation} className="rounded mb-4 h-40 w-full object-cover"/>
-<h3 className="text-cyan-400 mb-2">Defense Simulation Engine</h3>
+<h3 className="text-cyan-400 mb-3">AI Decision Support</h3>
 <p className="text-slate-400 text-sm">
-Simulate defense actions like blocking IPs or isolating devices.
+The AI copilot explains threats and recommends mitigation actions.
 </p>
 </div>
 
-<div className="bg-[#0f172a] border border-slate-800 rounded-xl p-6">
-<img src={report} className="rounded mb-4 h-40 w-full object-cover"/>
-<h3 className="text-cyan-400 mb-2">Incident Report Intelligence</h3>
-<p className="text-slate-400 text-sm">
-Generate AI-driven incident reports for security teams.
-</p>
 </div>
 
-<div className="bg-[#0f172a] border border-slate-800 rounded-xl p-6">
-<img src={copilot} className="rounded mb-4 h-40 w-full object-cover"/>
-<h3 className="text-cyan-400 mb-2">AI Security Copilot</h3>
+</div>
+{/* FOOTER / CONTACT */}
+
+<div className="px-16 py-12 border-t border-slate-800 bg-[#020617]">
+
+<div className="flex flex-col md:flex-row justify-between items-center gap-6">
+
+{/* LEFT */}
+
+<div>
+
+<h3 className="text-cyan-400 text-lg font-semibold">
+AegisCore
+</h3>
+
 <p className="text-slate-400 text-sm">
-Explain threats and recommend actions with AI assistance.
+AI-Powered Cyber Defense Platform
 </p>
+
+</div>
+
+{/* CENTER */}
+
+<div className="flex gap-6 text-sm text-slate-400">
+
+<p>Platform</p>
+<p>Security</p>
+<p>Documentation</p>
+<p>Contact</p>
+
+</div>
+
+{/* RIGHT */}
+
+<div className="text-sm text-slate-400">
+
+<p>
+<span className="text-cyan-400">Email:</span> support@aegiscore.ai
+</p>
+
+<p className="mt-1">
+© {new Date().getFullYear()} AegisCore Security Platform
+</p>
+
 </div>
 
 </div>
