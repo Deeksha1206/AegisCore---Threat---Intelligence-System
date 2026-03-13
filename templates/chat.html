@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SentinelAI Chat</title>
+
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: white;
+    margin: 0;
+}
+
+#chat {
+    max-width: 750px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+h2 {
+    text-align: center;
+}
+
+.msg {
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 10px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.user {
+    background: #1e40af;
+    text-align: right;
+}
+
+.bot {
+    background: #334155;
+    text-align: left;
+}
+
+#input-area {
+    margin-top: 15px;
+}
+
+input {
+    width: 75%;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+}
+
+button {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 6px;
+    border: none;
+}
+
+.suggest-btn {
+    display: block;
+    margin: 8px 0;
+    background-color: #2563eb;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    width: 100%;
+}
+
+.suggest-btn:hover {
+    background-color: #1d4ed8;
+}
+
+#suggestions {
+    margin-bottom: 20px;
+}
+
+.typing {
+    font-style: italic;
+    opacity: 0.8;
+}
+
+.dot {
+    animation: blink 1.4s infinite both;
+}
+
+.dot:nth-child(2) {
+    animation-delay: .2s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: .4s;
+}
+
+@keyframes blink {
+    0% { opacity: .2; }
+    20% { opacity: 1; }
+    100% { opacity: .2; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.threat-high { color: #ef4444; font-weight: bold; }
+.threat-medium { color: #facc15; font-weight: bold; }
+.threat-low { color: #22c55e; font-weight: bold; }
+
+</style>
+</head>
+
+<body>
+
+<div id="chat">
+    <h2>AI Threat Copilot</h2>
+
+    <div id="suggestions">
+        <b>Quick Actions:</b>
+
+        <button class="suggest-btn" onclick="quickAsk('Why is threat high right now?')">
+            Why is threat high right now?
+        </button>
+
+        <button class="suggest-btn" onclick="quickAsk('Which IP is most suspicious?')">
+            Which IP is most suspicious?
+        </button>
+
+        <button class="suggest-btn" onclick="quickAsk('What happens if I block 192.168.1.10?')">
+            What happens if I block 192.168.1.10?
+        </button>
+    </div>
+
+    <div id="messages"></div>
+
+    <div id="input-area">
+        <input id="question" placeholder="Ask about threats..." />
+        <button onclick="send()">Send</button>
+    </div>
+</div>
+
+<script>
+
+async function send() {
+    const questionInput = document.getElementById("question");
+    const question = questionInput.value;
+
+    if (!question) return;
+
+    const messages = document.getElementById("messages");
+
+    // Hide suggestions after first interaction
+    document.getElementById("suggestions").style.display = "none";
+
+    messages.innerHTML += `<div class="msg user">${question}</div>`;
+    questionInput.value = "";
+
+    // Typing animation
+    const typingDiv = document.createElement("div");
+    typingDiv.className = "msg bot typing";
+    typingDiv.id = "typing";
+    typingDiv.innerHTML = `Analyzing<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>`;
+    messages.appendChild(typingDiv);
+
+    const response = await fetch("/ask-ai", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({question})
+    });
+
+    const data = await response.json();
+
+    // Remove typing animation
+    typingDiv.remove();
+
+    let answerText = data.answer;
+
+    // Color code threat level
+    answerText = answerText.replace(
+        /Threat Level:\s*(High)/i,
+        'Threat Level: <span class="threat-high">High</span>'
+    );
+
+    answerText = answerText.replace(
+        /Threat Level:\s*(Medium)/i,
+        'Threat Level: <span class="threat-medium">Medium</span>'
+    );
+
+    answerText = answerText.replace(
+        /Threat Level:\s*(Low)/i,
+        'Threat Level: <span class="threat-low">Low</span>'
+    );
+
+   // Convert line breaks to HTML breaks
+answerText = answerText.replace(/\n/g, "<br>");
+
+messages.innerHTML += `<div class="msg bot">${answerText}</div>`;
+
+    messages.scrollTop = messages.scrollHeight;
+}
+
+function quickAsk(text) {
+    document.getElementById("question").value = text;
+    send();
+}
+
+</script>
+
+</body>
+</html>

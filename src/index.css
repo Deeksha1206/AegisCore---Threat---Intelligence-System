@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Page base */
+
+html, body, #root{
+height:100%;
+margin:0;
+padding:0;
+overflow-x:hidden;
+}
+
+body{
+background:#020617;
+font-family: system-ui, -apple-system, sans-serif;
+position:relative;
+}
+
+/* CYBER BACKGROUND */
+
+body::before{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:
+radial-gradient(circle at 40% 40%, rgba(34,211,238,0.15), transparent 40%),
+radial-gradient(circle at 70% 60%, rgba(34,211,238,0.08), transparent 50%),
+linear-gradient(rgba(34,211,238,0.06) 1px, transparent 1px),
+linear-gradient(90deg, rgba(34,211,238,0.06) 1px, transparent 1px);
+background-size:
+100% 100%,
+100% 100%,
+60px 60px,
+60px 60px;
+z-index:-1;
+animation: cyberMove 20s linear infinite;
+}
+
+/* subtle movement */
+
+@keyframes cyberMove{
+0%{
+background-position:
+0 0,
+0 0,
+0 0,
+0 0;
+}
+100%{
+background-position:
+0 0,
+0 0,
+60px 60px,
+60px 60px;
+}
+}
