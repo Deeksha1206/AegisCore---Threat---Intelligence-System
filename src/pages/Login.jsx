@@ -18,47 +18,40 @@ const navigate = useNavigate();
 const [email, setEmail] = useState("");
 const [otp, setOtp] = useState("");
 const [step, setStep] = useState(1);
-const [verified, setVerified] = useState(false);
-const [selectedFeature, setSelectedFeature] = useState(null);
+const [, setVerified] = useState(false);
+const [, setSelectedFeature] = useState(null);
 
 const handleLogin = async (e) => {
 e.preventDefault();
+navigate("/dashboard");
 
-if(step === 1){
-
-try{
+if (step === 1) {
+try {
 await sendOTP(email);
 setStep(2);
-}catch(error){
+return;
+} catch (error) {
 console.error("OTP send failed", error);
+return;
+}
 }
 
-}else{
-
-try{
-
+if (step === 2) {
+try {
 const res = await verifyOTP(email, otp);
 
-if(res.status === "verified"){
-
+if (res.status === "verified") {
 setVerified(true);
-
-setTimeout(()=>{
+alert("Authentication successful")
 navigate("/dashboard");
-},2000);
-
-}else{
-
+} else {
 alert("Invalid verification code");
-
 }
 
-}catch(error){
+} catch (error) {
 console.error("OTP verification failed", error);
 }
-
 }
-
 };
 
 const features = [
@@ -104,8 +97,6 @@ return(
 
 <div className="w-full text-white">
 
-{/* NAVBAR */}
-
 <div className="flex justify-between items-center px-12 py-6 border-b border-slate-800">
 
 <h1 className="text-cyan-400 text-xl font-semibold">
@@ -139,8 +130,6 @@ Explore Platform
 </div>
 
 </div>
-
-{/* HERO */}
 
 <div className="flex flex-wrap px-16 py-24">
 
@@ -192,8 +181,6 @@ Watch Product Tour
 </div>
 
 </div>
-
-{/* LOGIN CARD */}
 
 <div id="login-section" className="w-full lg:w-1/2 flex justify-center">
 
@@ -252,8 +239,9 @@ Verification code sent to enterprise email.
 type="submit"
 className="w-full bg-cyan-500 py-2 rounded text-black"
 >
-{step===1?"Authenticate & Continue":"Verify & Continue Securely"}
+{step === 1 ? "Authenticate & Continue" : "Verify & Continue Securely"}
 </button>
+
 <div className="mt-6 text-xs text-slate-400">
 
 <p className="text-cyan-400 mb-2">Authentication Flow:</p>
@@ -280,8 +268,6 @@ Monitored under secure enterprise identity protocol.
 </div>
 
 </div>
-
-{/* PLATFORM CAPABILITIES */}
 
 <div id="platform-capabilities" className="px-16 py-24 border-t border-slate-800">
 
@@ -312,8 +298,6 @@ className="bg-[#0f172a] border border-slate-800 rounded-xl p-6 cursor-pointer ho
 </div>
 
 </div>
-
-{/* WHY AEGISCORE */}
 
 <div className="px-16 py-24 border-t border-slate-800">
 
@@ -354,49 +338,34 @@ The AI copilot explains threats and recommends mitigation actions.
 </div>
 
 </div>
-{/* FOOTER / CONTACT */}
 
 <div className="px-16 py-12 border-t border-slate-800 bg-[#020617]">
 
 <div className="flex flex-col md:flex-row justify-between items-center gap-6">
 
-{/* LEFT */}
-
 <div>
-
 <h3 className="text-cyan-400 text-lg font-semibold">
 AegisCore
 </h3>
-
 <p className="text-slate-400 text-sm">
 AI-Powered Cyber Defense Platform
 </p>
-
 </div>
 
-{/* CENTER */}
-
 <div className="flex gap-6 text-sm text-slate-400">
-
 <p>Platform</p>
 <p>Security</p>
 <p>Documentation</p>
 <p>Contact</p>
-
 </div>
 
-{/* RIGHT */}
-
 <div className="text-sm text-slate-400">
-
 <p>
 <span className="text-cyan-400">Email:</span> support@aegiscore.ai
 </p>
-
 <p className="mt-1">
 © {new Date().getFullYear()} AegisCore Security Platform
 </p>
-
 </div>
 
 </div>

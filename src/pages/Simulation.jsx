@@ -10,7 +10,7 @@ export default function Simulation() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/simulate", {
+      const response = await fetch("http://localhost:8001/simulate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

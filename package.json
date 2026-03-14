@@ -10,12 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "apexcharts": "^5.10.3",
     "axios": "^1.13.6",
     "clsx": "^2.1.1",
     "framer-motion": "^12.35.0",
     "jspdf": "^4.2.0",
     "lucide-react": "^0.577.0",
     "react": "^19.2.0",
+    "react-apexcharts": "^2.1.0",
     "react-dom": "^19.2.0",
     "react-force-graph": "^1.48.2",
     "react-force-graph-2d": "^1.29.1",

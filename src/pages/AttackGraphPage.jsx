@@ -13,7 +13,7 @@ export default function AttackGraphPage() {
   const [edges, setEdges] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/attack-path")
+    fetch("http://localhost:8001/attack-path")
       .then(res => res.json())
       .then(data => {
         if (data && data.paths) {

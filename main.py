@@ -221,24 +221,39 @@ def recent_threats():
 
 @app.get("/risk-summary")
 def risk_summary():
-    global threat_summary
+    global event_buffer
 
-    if threat_summary is None:
+    if event_buffer.empty:
         return {
+            "overall_risk": 0,
             "threat_level": "LOW",
-            "risk_score": 0,
             "suspicious_ip": "None",
             "suspicious_user": "None"
         }
 
+    latest = event_buffer.iloc[-1]
+
+    risk = 0
+
+    if latest["event_type"] == "intrusion_attempt":
+        risk = 1
+    elif latest["event_type"] == "download":
+        risk = 0.8
+    elif latest["event_type"] == "data_access":
+        risk = 0.5
+    elif latest["event_type"] == "failed_login":
+        risk = 0.3
+    else:
+        risk = 0.2
+
+    threat_level = "HIGH" if risk >= 0.7 else "MEDIUM" if risk >= 0.4 else "LOW"
+
     return {
-        "threat_level": threat_summary["threat_level"],
-        "risk_score": threat_summary["overall_risk"],
-        "suspicious_ip": threat_summary["suspicious_ip"],
-        "suspicious_user": threat_summary["suspicious_user"]
+        "overall_risk": risk,
+        "threat_level": threat_level,
+        "suspicious_ip": latest["source_ip"],
+        "suspicious_user": latest["user"]
     }
-
-
 # -----------------------
 # ATTACK PATH
 # -----------------------

@@ -11,7 +11,7 @@ export default function Reports() {
     setReport(null);
 
     try {
-      const response = await fetch("http://localhost:8000/generate-report");
+      const response = await fetch("http://localhost:8001/generate-report");
 
       const data = await response.json();
 
@@ -90,9 +90,9 @@ export default function Reports() {
         )}
 
         {report && (
-          <pre className="text-white text-sm overflow-auto whitespace-pre-wrap">
-            {JSON.stringify(report, null, 2)}
-          </pre>
+          <div className="text-white text-sm whitespace-pre-line leading-7">
+            {typeof report === "object" ? report.report : report}
+          </div>
         )}
       </div>
     </div>
